@@ -1,0 +1,22 @@
+--- Insertion Phase ---
+Inserted 105 at index 5 (Collisions: 0)
+Hash Table: [ - - - - - 105 - - - - ]
+Inserted 210 at index 0 (Collisions: 0)
+Hash Table: [ 210 - - - - 105 - - - - ]
+Inserted 315 at index 6 (Collisions: 1)
+Hash Table: [ 210 - - - - 105 315 - - - ]
+Inserted 420 at index 1 (Collisions: 1)
+Hash Table: [ 210 420 - - - 105 315 - - - ]
+Inserted 525 at index 7 (Collisions: 2)
+Hash Table: [ 210 420 - - - 105 315 525 - - ]
+Inserted 630 at index 2 (Collisions: 2)
+Hash Table: [ 210 420 630 - - 105 315 525 - - ]
+Inserted 735 at index 8 (Collisions: 3)
+Hash Table: [ 210 420 630 - - 105 315 525 735 - ]
+Inserted 840 at index 3 (Collisions: 3)
+Hash Table: [ 210 420 630 840 - 105 315 525 735 - ]
+
+--- Search Phase ---
+Searching for ID 315:
+-> Hashing Comparisons: 2
+-> Linear Search Comparisons: 3
