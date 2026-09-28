@@ -1,139 +1,71 @@
 SONG ID HASH TABLE - DIVISION METHOD
-
 Hash function: h(k) = k % 10
-
 Collision resolution: Linear Probing
-
- 
 
 --- INSERTION ---
 
- 
-
 Insert 105: hash(105) = 5 -> placed at index 5
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :    -   -   -   -   - 105   -   -   -   -
-
- 
 
 Insert 210: hash(210) = 0 -> placed at index 0
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :  210   -   -   -   - 105   -   -   -   -
-
- 
 
 Insert 315: hash(315) = 5 -> collision, placed at index 6
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :  210   -   -   -   - 105 315   -   -   -
-
- 
 
 Insert 420: hash(420) = 0 -> collision, placed at index 1
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :  210 420   -   -   - 105 315   -   -   -
-
- 
 
 Insert 525: hash(525) = 5 -> collision, placed at index 7
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :  210 420   -   -   - 105 315 525   -   -
-
- 
 
 Insert 630: hash(630) = 0 -> collision, placed at index 2
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :  210 420 630   -   - 105 315 525   -   -
-
- 
 
 Insert 735: hash(735) = 5 -> collision, placed at index 8
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :  210 420 630   -   - 105 315 525 735   -
-
- 
 
 Insert 840: hash(840) = 0 -> collision, placed at index 3
 
-Hash Table:
-
 Index :    0   1   2   3   4   5   6   7   8   9
-
 Value :  210 420 630 840   - 105 315 525 735   -
-
- 
 
 --- SEARCH COMPARISON ---
 
- 
-
 Song ID    Hash Comparisons   Linear Comparisons
+--------------------------------------------------
+105        1                  1
+210        1                  2
+315        2                  3
+420        2                  4
+525        3                  5
+630        3                  6
+735        4                  7
+840        4                  8
 
-----------------------------------------------------
-
-105        1                  1                
-
-210        1                  2                
-
-315        2                  3                
-
-420        2                  4                
-
-525        3                  5                
-
-630        3                  6                
-
-735        4                  7                
-
-840        4                  8                
-
- 
-
-Total hash comparisons   : 20
-
-Total linear comparisons : 36
-
-Average hash comparisons : 2.50
-
+Total hash comparisons    : 20
+Total linear comparisons  : 36
+Average hash comparisons  : 2.50
 Average linear comparisons: 4.50
-
-Load factor              : 0.80 (80%)
-
- 
+Load factor               : 0.80 (80%)
 
 Conclusion:
-
 Hashing requires fewer comparisons for these successful searches,
-
 but collisions increase the number of probes. With a load factor
-
 of 0.80, collision handling is important for search performance.
 
  
