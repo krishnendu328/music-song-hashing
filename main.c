@@ -1,283 +1,171 @@
 #include <stdio.h>
 
- 
+#define SIZE 10
 
-#define TABLE_SIZE 10
+int hashTable[SIZE];
 
-#define N 8
-
- 
-
-int song_ids[N] = {105, 210, 315, 420, 525, 630, 735, 840};
-
- 
-
-int hash_function(int key) {
-
-   return key % TABLE_SIZE;
-
+int hashFunction(int key)
+{
+    return key % SIZE;
 }
 
- 
+void insert(int key)
+{
+    int index = hashFunction(key);
 
-void display_table(int table[]) {
+    while (hashTable[index] != -1)
+        index = (index + 1) % SIZE;
 
-   printf("\nHash Table:\n");
-
-   printf("Index : ");
-
-   for (int i = 0; i < TABLE_SIZE; i++)
-
-       printf("%4d", i);
-
- 
-
-   printf("\nValue : ");
-
-   for (int i = 0; i < TABLE_SIZE; i++) {
-
-       if (table[i] == -1)
-
-           printf("%4s", "-");
-
-       else
-
-           printf("%4d", table[i]);
-
-   }
-
-   printf("\n");
-
+    hashTable[index] = key;
 }
 
- 
+int hashSearch(int key, int *comparisons)
+{
+    int index = hashFunction(key);
+    int start = index;
 
-void insert(int table[], int key) {
+    *comparisons = 0;
 
-   int index = hash_function(key);
+    while (hashTable[index] != -1)
+    {
+        (*comparisons)++;
 
-   int start = index;
+        if (hashTable[index] == key)
+            return index;
 
-   int collision = 0;
+        index = (index + 1) % SIZE;
 
- 
+        if (index == start)
+            break;
+    }
 
-   while (table[index] != -1) {
-
-       collision = 1;
-
-       index = (index + 1) % TABLE_SIZE;
-
- 
-
-       if (index == start) {
-
-           printf("Hash table is full. Cannot insert %d.\n", key);
-
-           return;
-
-       }
-
-   }
-
- 
-
-   table[index] = key;
-
- 
-
-   printf("\nInsert %d: hash(%d) = %d", key, key, hash_function(key));
-
-   if (collision)
-
-       printf(" -> collision, placed at index %d", index);
-
-   else
-
-       printf(" -> placed at index %d", index);
-
- 
-
-   display_table(table);
-
+    return -1;
 }
 
- 
+int linearSearch(int key, int *comparisons)
+{
+    *comparisons = 0;
 
-int hashing_search(int table[], int key, int *comparisons) {
+    for (int i = 0; i < SIZE; i++)
+    {
+        if (hashTable[i] != -1)
+        {
+            (*comparisons)++;
 
-   int index = hash_function(key);
+            if (hashTable[i] == key)
+                return i;
+        }
+    }
 
-   int start = index;
-
-   *comparisons = 0;
-
- 
-
-   while (table[index] != -1) {
-
-       (*comparisons)++;
-
- 
-
-       if (table[index] == key)
-
-           return index;
-
- 
-
-       index = (index + 1) % TABLE_SIZE;
-
- 
-
-       if (index == start)
-
-           break;
-
-   }
-
- 
-
-   return -1;
-
+    return -1;
 }
 
- 
+void display()
+{
+    printf("\nIndex : ");
 
-int linear_search(int array[], int n, int key, int *comparisons) {
+    for (int i = 0; i < SIZE; i++)
+        printf("%4d", i);
 
-   *comparisons = 0;
+    printf("\nValue : ");
 
- 
+    for (int i = 0; i < SIZE; i++)
+    {
+        if (hashTable[i] == -1)
+            printf("%4s", "-");
+        else
+            printf("%4d", hashTable[i]);
+    }
 
-   for (int i = 0; i < n; i++) {
-
-       (*comparisons)++;
-
- 
-
-       if (array[i] == key)
-
-           return i;
-
-   }
-
- 
-
-   return -1;
-
+    printf("\n");
 }
 
- 
+int main()
+{
+    int songs[] = {105, 210, 315, 420, 525, 630, 735, 840};
+    int n = 8;
+    int totalHash = 0;
+    int totalLinear = 0;
 
-int main(void) {
+    for (int i = 0; i < SIZE; i++)
+        hashTable[i] = -1;
 
-   int table[TABLE_SIZE];
+    printf("SONG ID HASH TABLE - DIVISION METHOD\n");
+    printf("Hash function: h(k) = k %% 10\n");
+    printf("Collision resolution: Linear Probing\n");
 
- 
+    printf("\n--- INSERTION ---\n");
 
-   for (int i = 0; i < TABLE_SIZE; i++)
+    for (int i = 0; i < n; i++)
+    {
+        int key = songs[i];
+        int hash = hashFunction(key);
 
-       table[i] = -1;
+        printf("\nInsert %d: hash(%d) = %d", key, key, hash);
 
- 
+        if (hashTable[hash] == -1)
+            printf(" -> placed at index %d\n", hash);
+        else
+            printf(" -> collision");
 
-   printf("SONG ID HASH TABLE - DIVISION METHOD\n");
+        insert(key);
 
-   printf("Hash function: h(k) = k %% %d\n", TABLE_SIZE);
+        int pos = hash;
 
-   printf("Collision resolution: Linear Probing\n");
+        while (hashTable[pos] != key)
+            pos = (pos + 1) % SIZE;
 
- 
+        if (pos != hash)
+            printf(", placed at index %d\n", pos);
 
-   printf("\n--- INSERTION ---\n");
+        display();
+    }
 
-   for (int i = 0; i < N; i++)
+    printf("\n--- SEARCH COMPARISON ---\n\n");
 
-       insert(table, song_ids[i]);
+    printf("%-10s %-18s %-20s\n",
+           "Song ID", "Hash Comparisons", "Linear Comparisons");
 
- 
+    printf("--------------------------------------------------\n");
 
-   printf("\n--- SEARCH COMPARISON ---\n");
+    for (int i = 0; i < n; i++)
+    {
+        int hashComp, linearComp;
 
- 
+        hashSearch(songs[i], &hashComp);
+        linearSearch(songs[i], &linearComp);
 
-   int queries[] = {105, 210, 315, 420, 525, 630, 735, 840};
+        printf("%-10d %-18d %-20d\n",
+               songs[i], hashComp, linearComp);
 
-   int query_count = sizeof(queries) / sizeof(queries[0]);
+        totalHash += hashComp;
+        totalLinear += linearComp;
+    }
 
- 
+    printf("\nTotal hash comparisons    : %d", totalHash);
+    printf("\nTotal linear comparisons  : %d", totalLinear);
 
-   int total_hash = 0;
+    printf("\nAverage hash comparisons  : %.2f",
+           (float)totalHash / n);
 
-   int total_linear = 0;
+    printf("\nAverage linear comparisons: %.2f",
+           (float)totalLinear / n);
 
- 
+    printf("\nLoad factor               : %.2f (%.0f%%)\n",
+           (float)n / SIZE,
+           ((float)n / SIZE) * 100);
 
-   printf("\n%-10s %-18s %-18s\n", "Song ID", "Hash Comparisons", "Linear Comparisons");
+    printf("\nConclusion:\n");
+    printf("Hashing requires fewer comparisons for these successful searches,\n");
+    printf("but collisions increase the number of probes. With a load factor\n");
+    printf("of 0.80, collision handling is important for search performance.\n");
 
-   printf("----------------------------------------------------\n");
-
- 
-
-   for (int i = 0; i < query_count; i++) {
-
-       int hash_comparisons, linear_comparisons;
-
- 
-
-       hashing_search(table, queries[i], &hash_comparisons);
-
-       linear_search(song_ids, N, queries[i], &linear_comparisons);
-
- 
-
-       total_hash += hash_comparisons;
-
-       total_linear += linear_comparisons;
-
- 
-
-       printf("%-10d %-18d %-18d\n",
-
-              queries[i], hash_comparisons, linear_comparisons);
-
-   }
-
- 
-
-   double load_factor = (double)N / TABLE_SIZE;
-
- 
-
-   printf("\nTotal hash comparisons  : %d\n", total_hash);
-
-   printf("Total linear comparisons : %d\n", total_linear);
-
-   printf("Average hash comparisons : %.2f\n", (double)total_hash / query_count);
-
-   printf("Average linear comparisons: %.2f\n",
-
-          (double)total_linear / query_count);
-
-   printf("Load factor              : %.2f (%.0f%%)\n",
-
-          load_factor, load_factor * 100);
-
- 
-
-   printf("\nConclusion:\n");
-
-   printf("Hashing requires fewer comparisons for these successful searches,\n");
-
-   printf("but collisions increase the number of probes. With a load factor\n");
-
-   printf("of %.2f, collision handling is important for search performance.\n",
-
-          load_factor);
-
- 
-
-   return 0;
-
+    return 0;
 }
+
+    
+
+   
+
+ 
+
